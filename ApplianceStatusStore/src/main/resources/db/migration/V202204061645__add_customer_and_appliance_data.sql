@@ -16,7 +16,7 @@ INSERT INTO appliances(customerId, applianceId, factoryNr)
 VALUES
        (@kallesGrustransporter, 'YS2R4X20005399401', 'ABC123'),
        (@kallesGrustransporter, 'VLUR4X20009093588', 'DEF456'),
-       (@kallesGrustransporter, 'VLUR4X20009048066', 'ABC123');
+       (@kallesGrustransporter, 'VLUR4X20009048066', 'GHI789');
 
 INSERT INTO appliances(customerId, applianceId, factoryNr)
 VALUES

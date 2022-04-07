@@ -14,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -24,10 +23,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class CustomerRepositoryTest {
 
   @Autowired
-  TestEntityManager entityManager;
+  private TestEntityManager entityManager;
 
   @Autowired
-  CustomerRepository customerRepository;
+  private CustomerRepository customerRepository;
 
 
   @BeforeEach

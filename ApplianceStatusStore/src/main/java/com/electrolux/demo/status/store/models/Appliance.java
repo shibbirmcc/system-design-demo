@@ -27,6 +27,24 @@ public class Appliance {
   @Column(name = "lastHeartBeatReceiveTime")
   private Instant lastHeartBeatReceiveTime;
 
+  public Appliance(){
+
+  }
+
+  public Appliance(Customer customer, String applianceId, String factoryNr,
+      Instant lastHeartBeatReceiveTime) {
+    this.customer = customer;
+    this.applianceId = applianceId;
+    this.factoryNr = factoryNr;
+    this.lastHeartBeatReceiveTime = lastHeartBeatReceiveTime;
+  }
+
+  public Appliance(Customer customer, String applianceId, String factoryNr) {
+    this.customer = customer;
+    this.applianceId = applianceId;
+    this.factoryNr = factoryNr;
+  }
+
   public Instant getLastHeartBeatReceiveTime() {
     return lastHeartBeatReceiveTime;
   }

@@ -28,6 +28,23 @@ public class Customer {
   @OneToMany(mappedBy = "customer")
   private Set<Appliance> appliances = new LinkedHashSet<>();
 
+  public Customer(){
+
+  }
+
+  public Customer(String name, String address) {
+    this.name = name;
+    this.address = address;
+  }
+
+  public Customer(Integer id, String name, String address,
+      Set<Appliance> appliances) {
+    this.id = id;
+    this.name = name;
+    this.address = address;
+    this.appliances = appliances;
+  }
+
   public Set<Appliance> getAppliances() {
     return appliances;
   }

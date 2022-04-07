@@ -1,7 +1,6 @@
 package com.electrolux.demo.status.store.repositories;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.electrolux.demo.status.store.models.Appliance;
 import com.electrolux.demo.status.store.models.Customer;
@@ -34,10 +33,13 @@ public class ApplianceRepositoryTest {
   private CustomerRepository customerRepository;
 
   @BeforeEach
-  public void addTestData(){
-    Customer customer1 = entityManager.persist(new Customer("Kalles Grustransporter AB", "Cementvägen 8, 111 11 Södertälje"));
-    Customer customer2 = entityManager.persist(new Customer("Johans Bulk AB", "Bulkvägen 12, 222 22 Stockholm"));
-    Customer customer3 = entityManager.persist(new Customer("Haralds Värdetransporter AB", "Budgetvägen 1, 333 33 Uppsala"));
+  public void addTestData() {
+    Customer customer1 = entityManager.persist(
+        new Customer("Kalles Grustransporter AB", "Cementvägen 8, 111 11 Södertälje"));
+    Customer customer2 = entityManager.persist(
+        new Customer("Johans Bulk AB", "Bulkvägen 12, 222 22 Stockholm"));
+    Customer customer3 = entityManager.persist(
+        new Customer("Haralds Värdetransporter AB", "Budgetvägen 1, 333 33 Uppsala"));
     entityManager.flush();
 
     entityManager.persist(new Appliance(customer1, "YS2R4X20005399401", "ABC123"));
@@ -53,7 +55,7 @@ public class ApplianceRepositoryTest {
   }
 
   @AfterEach
-  public void deleteTestData(){
+  public void deleteTestData() {
     applianceRepository.deleteAll();
     customerRepository.deleteAll();
     entityManager.getEntityManager()
@@ -62,7 +64,7 @@ public class ApplianceRepositoryTest {
   }
 
   @Test
-  public void testFindByApplianceId(){
+  public void testFindByApplianceId() {
     Optional<Appliance> appliance = applianceRepository.findByApplianceId("YS2R4X20005399401");
     assertThat(appliance).isNotEmpty();
     assertThat("ABC123").isEqualTo(appliance.get().getFactoryNr());

@@ -30,15 +30,17 @@ public class CustomerRepositoryTest {
 
 
   @BeforeEach
-  public void addTestData(){
-    entityManager.persist(new Customer("Kalles Grustransporter AB", "Cementvägen 8, 111 11 Södertälje"));
+  public void addTestData() {
+    entityManager.persist(
+        new Customer("Kalles Grustransporter AB", "Cementvägen 8, 111 11 Södertälje"));
     entityManager.persist(new Customer("Johans Bulk AB", "Bulkvägen 12, 222 22 Stockholm"));
-    entityManager.persist(new Customer("Haralds Värdetransporter AB", "Budgetvägen 1, 333 33 Uppsala"));
+    entityManager.persist(
+        new Customer("Haralds Värdetransporter AB", "Budgetvägen 1, 333 33 Uppsala"));
     entityManager.flush();
   }
 
   @AfterEach
-  public void deleteTestData(){
+  public void deleteTestData() {
     customerRepository.deleteAll();
     entityManager.getEntityManager()
         .createNativeQuery("ALTER TABLE customers AUTO_INCREMENT = 1")
@@ -46,7 +48,7 @@ public class CustomerRepositoryTest {
   }
 
   @Test
-  public void testGetById(){
+  public void testGetById() {
     Customer customer1 = customerRepository.getById(1);
     assertNotNull(customer1);
     assertThat("Kalles Grustransporter AB").isEqualTo(customer1.getName());

@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,7 +56,7 @@ public class HeartbeatLogRepositoryTest {
   }
 
   @AfterEach
-  public void deleteTestData() {
+  public void deleteTestDataIfExists() {
     heartbeatLogRepository.deleteAll();
     applianceRepository.deleteAll();
     customerRepository.deleteAll();

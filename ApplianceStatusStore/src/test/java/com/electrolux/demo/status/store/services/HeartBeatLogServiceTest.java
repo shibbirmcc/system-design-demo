@@ -22,8 +22,8 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 public class HeartBeatLogServiceTest {
 
-  private static final String APPLIANCE_ID = "YS2R4X20005399401";
-  
+  public static final String APPLIANCE_ID = "YS2R4X20005399401";
+
   @Autowired
   private ApplianceService applianceService;
 
@@ -33,9 +33,11 @@ public class HeartBeatLogServiceTest {
   @Autowired
   private HeartBeatLogService heartBeatLogService;
 
+  private Customer customer;
+
   @BeforeEach
   public void init() {
-    Customer customer = customerService.save(
+    customer = customerService.save(
         new Customer("Kalles Grustransporter AB", "Cementvägen 8, 111 11 Södertälje"));
     Appliance appliance = applianceService.save(
         new Appliance(customer, APPLIANCE_ID, "ABC123"));
@@ -44,7 +46,6 @@ public class HeartBeatLogServiceTest {
   @AfterEach
   public void destroy() {
     applianceService.delete(applianceService.getByApplianceId(APPLIANCE_ID).get());
-    Customer customer = customerService.getById(1).get();
     customerService.delete(customer);
   }
 
@@ -67,7 +68,7 @@ public class HeartBeatLogServiceTest {
     assertThat(heartBeats).containsExactly(
         manuallySortedHeartBeats.toArray(new HeartbeatLog[heartBeats.size()]));
 
-    heartBeats.forEach(hb -> heartBeatLogService.delete(hb));
+    heartBeatLogService.getFirst25HeartBeats().forEach(hb -> heartBeatLogService.delete(hb));
     assertThat(heartBeatLogService.getFirst25HeartBeats()).isEmpty();
   }
 

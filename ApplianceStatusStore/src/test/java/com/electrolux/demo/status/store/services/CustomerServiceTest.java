@@ -18,16 +18,16 @@ public class CustomerServiceTest {
 
   @Test
   public void testGetById() {
-    customerService.save(
+    Customer customer = customerService.save(
         new Customer("Kalles Grustransporter AB", "Cementvägen 8, 111 11 Södertälje"));
 
-    Optional<Customer> customer1 = customerService.getById(1);
+    Optional<Customer> customer1 = customerService.getById(customer.getId());
     assertThat(customer1).isNotEmpty();
     assertThat("Kalles Grustransporter AB").isEqualTo(customer1.get().getName());
     assertThat("Cementvägen 8, 111 11 Södertälje").isEqualTo(customer1.get().getAddress());
 
     customerService.delete(customer1.get());
-    assertThat(customerService.getById(1)).isEmpty();
+    assertThat(customerService.getById(customer.getId())).isEmpty();
   }
 
 }

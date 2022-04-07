@@ -1,35 +1,34 @@
 package com.electrolux.demo.status.store.services;
 
 import com.electrolux.demo.status.store.models.Appliance;
-import com.electrolux.demo.status.store.models.HeartbeatLog;
-import com.electrolux.demo.status.store.repositories.ApplianceRepository;
-import com.electrolux.demo.status.store.repositories.HeartbeatLogRepository;
-import java.util.List;
+import java.time.Instant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ApplianceStatusUpdaterService {
-  private HeartbeatLogRepository heartbeatLogRepository;
-  private ApplianceRepository applianceRepository;
+
+  private HeartBeatLogService heartBeatLogService;
+  private ApplianceService applianceService;
 
   @Autowired
-  public ApplianceStatusUpdaterService(HeartbeatLogRepository heartbeatLogRepository, ApplianceRepository applianceRepository){
-    this.heartbeatLogRepository = heartbeatLogRepository;
-    this.applianceRepository = applianceRepository;
+  public ApplianceStatusUpdaterService(
+      HeartBeatLogService heartBeatLogService,
+      ApplianceService applianceService) {
+    this.heartBeatLogService = heartBeatLogService;
+    this.applianceService = applianceService;
   }
 
   @Scheduled(fixedDelayString = "${statusupdater.fixedDelay.in.milliseconds}")
-  public void updateApplianceConnectivityStatus(){
-    List<HeartbeatLog> heartBeats = heartbeatLogRepository.findFirst25ByOrderByHeartbeatReceivedAt();
-    heartBeats.forEach(heartBeat -> {
+  public void updateApplianceConnectivityStatus() {
+    heartBeatLogService.getFirst25HeartBeats().forEach(heartBeat -> {
+      heartBeatLogService.delete(heartBeat);
       Appliance appliance = heartBeat.getAppliance();
-      appliance.setLastHeartBeatReceiveTime(heartBeat.getHeartbeatReceivedAt());
-      applianceRepository.save(appliance);
-      heartbeatLogRepository.delete(heartBeat);
+      Instant time = heartBeat.getHeartbeatReceivedAt();
+      appliance.setLastHeartBeatReceiveTime(time);
+      applianceService.save(appliance);
     });
   }
-
 
 }

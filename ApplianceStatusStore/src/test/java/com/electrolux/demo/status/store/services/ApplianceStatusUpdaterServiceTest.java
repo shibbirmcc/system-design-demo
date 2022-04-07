@@ -1,18 +1,17 @@
 package com.electrolux.demo.status.store.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 
 import com.electrolux.demo.status.store.models.Appliance;
 import com.electrolux.demo.status.store.models.Customer;
 import com.electrolux.demo.status.store.models.HeartbeatLog;
-import com.electrolux.demo.status.store.repositories.ApplianceRepository;
-import com.electrolux.demo.status.store.repositories.CustomerRepository;
-import com.electrolux.demo.status.store.repositories.HeartbeatLogRepository;
 import java.time.Duration;
 import java.time.Instant;
-import javax.persistence.EntityManager;
+import java.util.List;
+import java.util.Optional;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,56 +26,51 @@ import org.springframework.test.context.ActiveProfiles;
 public class ApplianceStatusUpdaterServiceTest {
 
   @Autowired
-  private EntityManager entityManager;
+  private ApplianceService applianceService;
 
   @Autowired
-  private ApplianceRepository applianceRepository;
+  private CustomerService customerService;
 
   @Autowired
-  private CustomerRepository customerRepository;
-
-  @Autowired
-  private HeartbeatLogRepository heartbeatLogRepository;
+  private HeartBeatLogService heartBeatLogService;
 
   @SpyBean
   private ApplianceStatusUpdaterService applianceStatusUpdaterService;
 
+  private Customer customer;
+
   @BeforeEach
-  public void addTestData() {
-    Customer customer1 =
-        customerRepository.save(
-            new Customer("Kalles Grustransporter AB", "Cementvägen 8, 111 11 Södertälje"));
-
-    Appliance appliance1 = applianceRepository.save(
-        new Appliance(customer1, "YS2R4X20005399401", "ABC123"));
-    Appliance appliance2 = applianceRepository.save(
-        new Appliance(customer1, "VLUR4X20009093588", "DEF456"));
-    Appliance appliance3 = applianceRepository.save(
-        new Appliance(customer1, "VLUR4X20009048066", "GHI789"));
-
-    heartbeatLogRepository.save(
-        new HeartbeatLog(appliance1, Instant.parse("2022-04-07T11:30:00.00Z")));
-    heartbeatLogRepository.save(
-        new HeartbeatLog(appliance2, Instant.parse("2022-04-07T11:29:00.00Z")));
-    heartbeatLogRepository.save(
-        new HeartbeatLog(appliance3, Instant.parse("2022-04-07T11:20:00.00Z")));
+  public void init() {
+    customer = customerService.save(
+        new Customer("Kalles Grustransporter AB", "Cementvägen 8, 111 11 Södertälje"));
+    Appliance appliance = applianceService.save(
+        new Appliance(customer, HeartBeatLogServiceTest.APPLIANCE_ID, "ABC123"));
+    heartBeatLogService.save(new HeartbeatLog(appliance, Instant.parse("2022-04-07T11:30:00.00Z")));
+    heartBeatLogService.save(new HeartbeatLog(appliance, Instant.parse("2022-04-07T12:30:00.00Z")));
+    heartBeatLogService.save(new HeartbeatLog(appliance, Instant.parse("2022-04-07T13:30:00.00Z")));
   }
 
   @AfterEach
-  public void deleteTestData() {
-    heartbeatLogRepository.deleteAll();
-    applianceRepository.deleteAll();
-    customerRepository.deleteAll();
-    entityManager.createNativeQuery("ALTER TABLE customers AUTO_INCREMENT = 1")
-        .executeUpdate();
+  public void destroy() {
+    applianceService.delete(
+        applianceService.getByApplianceId(HeartBeatLogServiceTest.APPLIANCE_ID).get());
+    customerService.delete(customer);
   }
 
 
   @Test
   public void whenWaitThenSchedulerProcessesAndDeletesHeartBeatLogs() {
-    assertThat(heartbeatLogRepository.count()).isEqualTo(0);
+    List<HeartbeatLog> heartBeats = heartBeatLogService.getFirst25HeartBeats();
+    assertNotNull(heartBeats);
+    assertThat(heartBeats).isNotEmpty();
+    assertThat(heartBeats).hasSize(3);
     Awaitility.await().atMost(Duration.ofSeconds(15))
         .untilAsserted(() -> verify(applianceStatusUpdaterService, atLeast(2)));
-    assertThat(heartbeatLogRepository.count()).isEqualTo(0);
+    assertThat(heartBeatLogService.getFirst25HeartBeats()).isEmpty();
+    Optional<Appliance> appliance = applianceService.getByApplianceId(
+        HeartBeatLogServiceTest.APPLIANCE_ID);
+    assertThat(appliance).isNotEmpty();
+    assertThat(Instant.parse("2022-04-07T13:30:00.00Z")).isEqualTo(
+        appliance.get().getLastHeartBeatReceiveTime());
   }
 }

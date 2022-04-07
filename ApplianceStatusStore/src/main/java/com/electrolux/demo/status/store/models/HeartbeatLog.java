@@ -20,7 +20,7 @@ public class HeartbeatLog {
   @Column(name = "id", nullable = false, length = 100)
   private String id;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
   @JoinColumn(name = "applianceId", nullable = false, referencedColumnName = "applianceId")
   private Appliance appliance;
 

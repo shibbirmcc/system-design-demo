@@ -37,6 +37,5 @@ public class ApplianceServiceTest {
 
     customerService.delete(customer);
     assertThat(customerService.getById(customer.getId())).isEmpty();
-
   }
 }

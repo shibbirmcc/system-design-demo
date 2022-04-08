@@ -2,6 +2,7 @@ package com.electrolux.demo.status.store.repositories;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.electrolux.demo.status.store.TestDataConstants;
 import com.electrolux.demo.status.store.dto.ApplianceDetail;
 import com.electrolux.demo.status.store.dto.ApplianceStatus;
 import com.electrolux.demo.status.store.models.Appliance;
@@ -40,22 +41,31 @@ public class ApplianceRepositoryTest {
   @BeforeEach
   public void addTestData() {
     Customer customer1 = entityManager.persist(
-        new Customer("Kalles Grustransporter AB", "Cementvägen 8, 111 11 Södertälje"));
+        new Customer(TestDataConstants.CUSTOMER_NAME_1, TestDataConstants.CUSTOMER_ADDRESS_1));
     Customer customer2 = entityManager.persist(
-        new Customer("Johans Bulk AB", "Bulkvägen 12, 222 22 Stockholm"));
+        new Customer(TestDataConstants.CUSTOMER_NAME_2, TestDataConstants.CUSTOMER_ADDRESS_2));
     Customer customer3 = entityManager.persist(
-        new Customer("Haralds Värdetransporter AB", "Budgetvägen 1, 333 33 Uppsala"));
+        new Customer(TestDataConstants.CUSTOMER_NAME_3, TestDataConstants.CUSTOMER_ADDRESS_3));
     entityManager.flush();
 
-    entityManager.persist(new Appliance(customer1, "YS2R4X20005399401", "ABC123", Instant.now()));
-    entityManager.persist(new Appliance(customer1, "VLUR4X20009093588", "DEF456"));
-    entityManager.persist(new Appliance(customer1, "VLUR4X20009048066", "GHI789", Instant.now()));
+    entityManager.persist(
+        new Appliance(customer1, TestDataConstants.APPLIANCE_ID_1, TestDataConstants.FACTORY_NO_1,
+            Instant.now()));
+    entityManager.persist(
+        new Appliance(customer1, TestDataConstants.APPLIANCE_ID_2, TestDataConstants.FACTORY_NO_2));
+    entityManager.persist(
+        new Appliance(customer1, TestDataConstants.APPLIANCE_ID_3, TestDataConstants.FACTORY_NO_3,
+            Instant.now()));
 
-    entityManager.persist(new Appliance(customer2, "YS2R4X20005388011", "JKL012"));
-    entityManager.persist(new Appliance(customer2, "YS2R4X20005387949", "MN0345"));
+    entityManager.persist(
+        new Appliance(customer2, TestDataConstants.APPLIANCE_ID_4, TestDataConstants.FACTORY_NO_4));
+    entityManager.persist(
+        new Appliance(customer2, TestDataConstants.APPLIANCE_ID_5, TestDataConstants.FACTORY_NO_5));
 
-    entityManager.persist(new Appliance(customer3, "YS2R4X20009048066", "PQR678"));
-    entityManager.persist(new Appliance(customer3, "VLUR4X20005387055", "STU901"));
+    entityManager.persist(
+        new Appliance(customer3, TestDataConstants.APPLIANCE_ID_6, TestDataConstants.FACTORY_NO_6));
+    entityManager.persist(
+        new Appliance(customer3, TestDataConstants.APPLIANCE_ID_7, TestDataConstants.FACTORY_NO_7));
     entityManager.flush();
   }
 
@@ -70,9 +80,10 @@ public class ApplianceRepositoryTest {
 
   @Test
   public void testFindByApplianceId() {
-    Optional<Appliance> appliance = applianceRepository.findByApplianceId("YS2R4X20005399401");
+    Optional<Appliance> appliance = applianceRepository.findByApplianceId(
+        TestDataConstants.APPLIANCE_ID_1);
     assertThat(appliance).isNotEmpty();
-    assertThat("ABC123").isEqualTo(appliance.get().getFactoryNr());
+    assertThat(TestDataConstants.FACTORY_NO_1).isEqualTo(appliance.get().getFactoryNr());
     assertThat(appliance.get().getCustomer()).isNotNull();
     assertThat(appliance.get().getCustomer().getId()).isEqualTo(1);
   }
@@ -82,8 +93,8 @@ public class ApplianceRepositoryTest {
     Page<ApplianceDetail> applianceDetailsList = applianceRepository.getApplianceDetails(
         Pageable.ofSize(25));
     applianceDetailsList.forEach(applianceDetail -> {
-      if ("YS2R4X20005399401".equals(applianceDetail.getApplianceId())
-          || "VLUR4X20009048066".equals(applianceDetail.getApplianceId())) {
+      if (TestDataConstants.APPLIANCE_ID_1.equals(applianceDetail.getApplianceId())
+          || TestDataConstants.APPLIANCE_ID_3.equals(applianceDetail.getApplianceId())) {
         assertThat(ApplianceStatus.CONNECTED).isEqualTo(applianceDetail.getApplianceStatus());
       } else {
         assertThat(ApplianceStatus.DISCONNECTED).isEqualTo(applianceDetail.getApplianceStatus());

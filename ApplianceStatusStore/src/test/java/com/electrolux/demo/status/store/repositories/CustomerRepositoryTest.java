@@ -3,7 +3,9 @@ package com.electrolux.demo.status.store.repositories;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.electrolux.demo.status.store.TestDataConstants;
 import com.electrolux.demo.status.store.models.Customer;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,10 +34,11 @@ public class CustomerRepositoryTest {
   @BeforeEach
   public void addTestData() {
     entityManager.persist(
-        new Customer("Kalles Grustransporter AB", "Cementvägen 8, 111 11 Södertälje"));
-    entityManager.persist(new Customer("Johans Bulk AB", "Bulkvägen 12, 222 22 Stockholm"));
+        new Customer(TestDataConstants.CUSTOMER_NAME_1, TestDataConstants.CUSTOMER_ADDRESS_1));
     entityManager.persist(
-        new Customer("Haralds Värdetransporter AB", "Budgetvägen 1, 333 33 Uppsala"));
+        new Customer(TestDataConstants.CUSTOMER_NAME_2, TestDataConstants.CUSTOMER_ADDRESS_2));
+    entityManager.persist(
+        new Customer(TestDataConstants.CUSTOMER_NAME_3, TestDataConstants.CUSTOMER_ADDRESS_3));
     entityManager.flush();
   }
 
@@ -49,20 +52,25 @@ public class CustomerRepositoryTest {
 
   @Test
   public void testGetById() {
-    Customer customer1 = customerRepository.getById(1);
+
+    List<Customer> customers = customerRepository.findAll();
+    assertThat(customers).isNotEmpty();
+    assertThat(customers).hasSize(3);
+
+    Customer customer1 = customers.get(0);
     assertNotNull(customer1);
-    assertThat("Kalles Grustransporter AB").isEqualTo(customer1.getName());
-    assertThat("Cementvägen 8, 111 11 Södertälje").isEqualTo(customer1.getAddress());
+    assertThat(TestDataConstants.CUSTOMER_NAME_1).isEqualTo(customer1.getName());
+    assertThat(TestDataConstants.CUSTOMER_ADDRESS_1).isEqualTo(customer1.getAddress());
 
-    Customer customer2 = customerRepository.getById(2);
+    Customer customer2 = customers.get(1);
     assertNotNull(customer2);
-    assertThat("Johans Bulk AB").isEqualTo(customer2.getName());
-    assertThat("Bulkvägen 12, 222 22 Stockholm").isEqualTo(customer2.getAddress());
+    assertThat(TestDataConstants.CUSTOMER_NAME_2).isEqualTo(customer2.getName());
+    assertThat(TestDataConstants.CUSTOMER_ADDRESS_2).isEqualTo(customer2.getAddress());
 
-    Customer customer3 = customerRepository.getById(3);
+    Customer customer3 = customers.get(2);
     assertNotNull(customer3);
-    assertThat("Haralds Värdetransporter AB").isEqualTo(customer3.getName());
-    assertThat("Budgetvägen 1, 333 33 Uppsala").isEqualTo(customer3.getAddress());
+    assertThat(TestDataConstants.CUSTOMER_NAME_3).isEqualTo(customer3.getName());
+    assertThat(TestDataConstants.CUSTOMER_ADDRESS_3).isEqualTo(customer3.getAddress());
   }
 
 }

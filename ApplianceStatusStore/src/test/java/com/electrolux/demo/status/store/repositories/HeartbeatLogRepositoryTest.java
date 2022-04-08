@@ -3,6 +3,7 @@ package com.electrolux.demo.status.store.repositories;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.electrolux.demo.status.store.TestDataConstants;
 import com.electrolux.demo.status.store.models.Appliance;
 import com.electrolux.demo.status.store.models.Customer;
 import com.electrolux.demo.status.store.models.HeartbeatLog;
@@ -46,12 +47,15 @@ public class HeartbeatLogRepositoryTest {
   @BeforeEach
   public void addTestData() {
     Customer customer1 = entityManager.persist(
-        new Customer("Kalles Grustransporter AB", "Cementvägen 8, 111 11 Södertälje"));
+        new Customer(TestDataConstants.CUSTOMER_NAME_1, TestDataConstants.CUSTOMER_ADDRESS_1));
     entityManager.flush();
 
-    appliance1 = entityManager.persist(new Appliance(customer1, "YS2R4X20005399401", "ABC123"));
-    appliance2 = entityManager.persist(new Appliance(customer1, "VLUR4X20009093588", "DEF456"));
-    appliance3 = entityManager.persist(new Appliance(customer1, "VLUR4X20009048066", "GHI789"));
+    appliance1 = entityManager.persist(
+        new Appliance(customer1, TestDataConstants.APPLIANCE_ID_1, TestDataConstants.FACTORY_NO_1));
+    appliance2 = entityManager.persist(
+        new Appliance(customer1, TestDataConstants.APPLIANCE_ID_2, TestDataConstants.FACTORY_NO_2));
+    appliance3 = entityManager.persist(
+        new Appliance(customer1, TestDataConstants.APPLIANCE_ID_3, TestDataConstants.FACTORY_NO_3));
     entityManager.flush();
   }
 

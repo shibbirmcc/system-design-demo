@@ -4,6 +4,8 @@ import com.electrolux.demo.status.store.models.Appliance;
 import com.electrolux.demo.status.store.repositories.ApplianceRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,11 @@ public class ApplianceService {
   @Transactional(readOnly = true)
   public Optional<Appliance> getByApplianceId(String applianceId) {
     return applianceRepository.findByApplianceId(applianceId);
+  }
+
+
+  public Page<Appliance> getAppliances(Pageable page) {
+    return applianceRepository.findAll(page);
   }
 
   @Transactional

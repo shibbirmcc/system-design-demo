@@ -1,5 +1,6 @@
 package com.electrolux.demo.status.store.services;
 
+import com.electrolux.demo.status.store.dto.ApplianceDetail;
 import com.electrolux.demo.status.store.models.Appliance;
 import com.electrolux.demo.status.store.repositories.ApplianceRepository;
 import java.util.Optional;
@@ -29,10 +30,11 @@ public class ApplianceService {
     return applianceRepository.findByApplianceId(applianceId);
   }
 
-
-  public Page<Appliance> getAppliances(Pageable page) {
-    return applianceRepository.findAll(page);
+  @Transactional(readOnly = true)
+  public Page<ApplianceDetail> getApplianceDetails(Pageable page) {
+    return applianceRepository.getApplianceDetails(page);
   }
+
 
   @Transactional
   public void delete(Appliance appliance) {

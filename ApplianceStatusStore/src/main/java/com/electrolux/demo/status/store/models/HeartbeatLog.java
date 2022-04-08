@@ -17,8 +17,8 @@ public class HeartbeatLog {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id", nullable = false, length = 100)
-  private String id;
+  @Column(name = "Id", nullable = false)
+  private Integer id;
 
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
   @JoinColumn(name = "applianceId", nullable = false, referencedColumnName = "applianceId")
@@ -30,7 +30,7 @@ public class HeartbeatLog {
   public HeartbeatLog() {
   }
 
-  public HeartbeatLog(String id, Appliance appliance, Instant heartbeatReceivedAt) {
+  public HeartbeatLog(Integer id, Appliance appliance, Instant heartbeatReceivedAt) {
     this.id = id;
     this.appliance = appliance;
     this.heartbeatReceivedAt = heartbeatReceivedAt;
@@ -57,11 +57,11 @@ public class HeartbeatLog {
     this.appliance = appliance;
   }
 
-  public String getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 }

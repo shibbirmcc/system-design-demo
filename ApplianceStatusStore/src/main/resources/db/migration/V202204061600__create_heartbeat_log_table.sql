@@ -1,6 +1,6 @@
 CREATE TABLE `heartbeat_logs`
 (
-    `id`                  varchar(100) NOT NULL,
+    `Id`                  int(11)      NOT NULL AUTO_INCREMENT,
     `applianceId`         varchar(100) NOT NULL,
     `heartbeatReceivedAt` timestamp    NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`Id`),

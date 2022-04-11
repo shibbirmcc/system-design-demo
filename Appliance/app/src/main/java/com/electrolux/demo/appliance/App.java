@@ -11,6 +11,7 @@ public class App {
             return;
         }
         String storageServerUrl = args[0];
+        logger.info("storageServerUrl: "+storageServerUrl);
         PingConnectionStatusStorageTask pingConnectionStatusStorageTask = new PingConnectionStatusStorageTask(storageServerUrl);
         pingConnectionStatusStorageTask.start();
     }

@@ -1,5 +1,6 @@
 package com.electrolux.demo.status.store.dto;
 
+import com.electrolux.demo.status.store.ApplicationConstants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
@@ -31,8 +32,8 @@ public class ApplianceDetail implements Serializable {
 
     if (this.lastHeartBeatReceiveTime == null) {
       applianceStatus = ApplianceStatus.DISCONNECTED;
-    } else if (Duration.between(this.lastHeartBeatReceiveTime, Instant.now()).abs().toMinutes()
-        > 2) {
+    } else if (Duration.between(this.lastHeartBeatReceiveTime, Instant.now()).abs().toSeconds()
+        > ApplicationConstants.ACCEPTED_PING_LAG_IN_SECONDS) {
       applianceStatus = ApplianceStatus.DISCONNECTED;
     } else {
       applianceStatus = ApplianceStatus.CONNECTED;

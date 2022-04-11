@@ -4,9 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.electrolux.demo.status.store.dto.ApplianceDetail;
 import com.electrolux.demo.status.store.dto.ApplianceStatus;
+import com.electrolux.demo.status.store.models.Appliance;
+import com.electrolux.demo.status.store.models.Customer;
+import com.electrolux.demo.status.store.services.ApplianceService;
+import com.electrolux.demo.status.store.services.CustomerService;
 import java.time.Duration;
 import org.awaitility.Awaitility;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -14,11 +21,36 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 class ApplicationTests {
 
   private TestRestTemplate testRestTemplate = new TestRestTemplate();
+
+  @Autowired
+  private ApplianceService applianceService;
+
+  @Autowired
+  private CustomerService customerService;
+
+  private Customer customer;
+  private Appliance appliance;
+
+  @BeforeEach
+  public void setup() {
+    customer = customerService.save(
+        new Customer(TestDataConstants.CUSTOMER_NAME_1, TestDataConstants.CUSTOMER_ADDRESS_1));
+    appliance = applianceService.save(new Appliance(customer, TestDataConstants.APPLIANCE_ID_1,
+        TestDataConstants.FACTORY_NO_1));
+  }
+
+  @AfterEach
+  public void tearDown() {
+    applianceService.delete(appliance);
+    customerService.delete(customer);
+  }
 
   @Test
   public void testPingFailure() throws Exception {
@@ -44,7 +76,7 @@ class ApplicationTests {
         null, new ParameterizedTypeReference<RestResponsePage<ApplianceDetail>>() {
         });
     assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
-    assertThat(7).isEqualTo(response.getBody().getTotalElements());
+    assertThat(1).isEqualTo(response.getBody().getTotalElements());
     assertThat(ApplianceStatus.DISCONNECTED).isEqualTo(
         response.getBody().getContent().get(0).getApplianceStatus());
 

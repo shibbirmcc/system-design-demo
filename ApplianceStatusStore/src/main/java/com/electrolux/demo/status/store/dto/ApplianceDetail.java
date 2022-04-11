@@ -18,6 +18,9 @@ public class ApplianceDetail implements Serializable {
   @JsonIgnore
   private Instant lastHeartBeatReceiveTime;
 
+  public ApplianceDetail() {
+  }
+
   public ApplianceDetail(String name, String address, String applianceId, String factoryNr,
       Instant lastHeartBeatReceiveTime) {
     this.name = name;

@@ -32,7 +32,8 @@ public class ApplianceService {
 
   @Transactional(readOnly = true)
   public Page<ApplianceDetail> getApplianceDetails(Pageable page) {
-    return applianceRepository.getApplianceDetails(page);
+    Page<ApplianceDetail> response = applianceRepository.getApplianceDetails(page);
+    return response;
   }
 
 

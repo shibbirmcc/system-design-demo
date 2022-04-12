@@ -18,5 +18,6 @@
 
 
 ### Improvements
+* Add JavaDoc
 * Add Unit test 
 * Using testcontainer to launch [ApplianceStatusStore](../ApplianceStatusStore/README.md) and Database to execute intergation testing.

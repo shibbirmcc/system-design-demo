@@ -92,6 +92,7 @@ docker run --name appliance-status-store --add-host=host.docker.internal:host-ga
 
 ### Improvements
 
+* Add JavaDoc
 * Improve Performance by Adding In Memory Key-Value store to store the ping requests and update
   database in the background
 * Add repository level tests

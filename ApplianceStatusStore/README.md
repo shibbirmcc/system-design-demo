@@ -97,3 +97,4 @@ docker run --name appliance-status-store --add-host=host.docker.internal:host-ga
   database in the background
 * Add repository level tests
 * add testcontainer for running tests on mysql database instead of h2
+* Vulnerability scanning of dependencies
